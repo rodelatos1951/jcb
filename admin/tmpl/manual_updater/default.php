@@ -28,8 +28,9 @@ use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Session\Session;
 
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->getDocument()->getWebAssetManager();
@@ -130,7 +131,7 @@ jQuery(document).ready(function($) {
 </div>
 <script>
 // token 
-var token = '<?php echo \JSession::getFormToken(); ?>';
+var token = '<?php echo Session::getFormToken(); ?>';
 // nice little dot trick :)
 jQuery(document).ready( function($) {
   var x=0;

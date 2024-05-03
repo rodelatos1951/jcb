@@ -38,9 +38,9 @@ use Joomla\Utilities\ArrayHelper;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\RouteHelper;
 use Joomla\CMS\Helper\TagsHelper;
-use VDM\Joomla\Utilities\JsonHelper;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\JsonHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;

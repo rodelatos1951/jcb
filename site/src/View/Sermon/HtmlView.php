@@ -36,7 +36,7 @@ use Joomla\CMS\Document\Document;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\HeaderCheck;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\RouteHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;

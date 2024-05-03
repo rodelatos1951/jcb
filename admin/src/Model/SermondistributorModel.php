@@ -38,8 +38,8 @@ use Joomla\CMS\User\User;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -51,6 +51,27 @@ use VDM\Joomla\Utilities\StringHelper;
  */
 class SermondistributorModel extends ListModel
 {
+	/**
+	 * The styles array.
+	 *
+	 * @var    array
+	 * @since  4.3
+	 */
+	protected array $styles = [
+		'administrator/components/com_sermondistributor/assets/css/admin.css',
+		'administrator/components/com_sermondistributor/assets/css/dashboard.css'
+ 	];
+
+	/**
+	 * The scripts array.
+	 *
+	 * @var    array
+	 * @since  4.3
+	 */
+	protected array $scripts = [
+		'administrator/components/com_sermondistributor/assets/js/admin.js'
+ 	];
+
 	public function getIcons()
 	{
 		// load user for access menus
@@ -290,6 +311,50 @@ class SermondistributorModel extends ListModel
 			}
 		}
 		return $icons;
+	}
+
+	/**
+	 * Method to get the styles that have to be included on the view
+	 *
+	 * @return  array    styles files
+	 * @since   4.3
+	 */
+	public function getStyles(): array
+	{
+		return $this->styles;
+	}
+
+	/**
+	 * Method to set the styles that have to be included on the view
+	 *
+	 * @return  void
+	 * @since   4.3
+	 */
+	public function setStyles(string $path): void
+	{
+		$this->styles[] = $path;
+	}
+
+	/**
+	 * Method to get the script that have to be included on the view
+	 *
+	 * @return  array    script files
+	 * @since   4.3
+	 */
+	public function getScripts(): array
+	{
+		return $this->scripts;
+	}
+
+	/**
+	 * Method to set the script that have to be included on the view
+	 *
+	 * @return  void
+	 * @since   4.3
+	 */
+	public function setScript(string $path): void
+	{
+		$this->scripts[] = $path;
 	}
 
 

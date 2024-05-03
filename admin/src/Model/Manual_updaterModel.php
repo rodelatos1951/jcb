@@ -35,9 +35,9 @@ use Joomla\CMS\User\User;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use VDM\Joomla\FOF\Encrypt\AES;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\JsonHelper;
+use TrueChristianChurch\Joomla\FOF\Encrypt\AES;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\JsonHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
