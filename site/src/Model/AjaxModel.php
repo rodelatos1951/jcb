@@ -40,10 +40,10 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\ObjectHelper;
-use VDM\Joomla\Utilities\GetHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
+use TrueChristianChurch\Joomla\Utilities\GetHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;

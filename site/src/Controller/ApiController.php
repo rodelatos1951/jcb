@@ -26,8 +26,9 @@ namespace TrueChristianChurch\Component\Sermondistributor\Site\Controller;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Component\ComponentHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -159,7 +160,7 @@ class ApiController extends FormController
 	protected function getApiUser()
 	{
 		// get params
-		$params = \JComponentHelper::getParams('com_sermondistributor');
+		$params = ComponentHelper::getParams('com_sermondistributor');
 		// return user object
 		return Factory::getUser($params->get('api', 0, 'INT'));
 	}

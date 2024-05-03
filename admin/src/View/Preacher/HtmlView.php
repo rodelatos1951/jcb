@@ -37,7 +37,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Document\Document;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
 
 // No direct access to this file
 \defined('_JEXEC') or die;
@@ -61,6 +61,7 @@ class HtmlView extends BaseHtmlView
 	{
 		// set params
 		$this->params = ComponentHelper::getParams('com_sermondistributor');
+		$this->useCoreUI = true;
 		// Assign the variables
 		$this->form = $this->get('Form');
 		$this->item = $this->get('Item');
@@ -228,6 +229,8 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function _prepareDocument(): void
 	{
+		// Load jQuery
+		Html::_('jquery.framework');
 		$isNew = ($this->item->id < 1);
 		$this->getDocument()->setTitle(Text::_($isNew ? 'COM_SERMONDISTRIBUTOR_PREACHER_NEW' : 'COM_SERMONDISTRIBUTOR_PREACHER_EDIT'));
 		// add styles

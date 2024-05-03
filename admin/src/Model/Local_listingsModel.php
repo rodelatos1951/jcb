@@ -36,10 +36,10 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\Input\Input;
 use TrueChristianChurch\Component\Sermondistributor\Administrator\Helper\SermondistributorHelper;
 use Joomla\CMS\Helper\TagsHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\ObjectHelper;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\FOF\Encrypt\AES;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\FOF\Encrypt\AES;
 
 // No direct access to this file
 \defined('_JEXEC') or die;

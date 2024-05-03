@@ -33,6 +33,7 @@ use Joomla\CMS\Version;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\Filesystem\Folder;
 use Joomla\Database\DatabaseInterface;
+use TrueChristianChurch\Joomla\SermonDistributor\Table\Schema;
 
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -300,11 +301,17 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 		// do any updates needed
 		if ($type === 'update')
 		{
+
+			// Check that the required configuration are set for PHP
+			$this->phpConfigurationCheck($this->app);
 		}
 
 		// do any install needed
 		if ($type === 'install')
 		{
+
+			// Check that the required configuration are set for PHP
+			$this->phpConfigurationCheck($this->app);
 		}
 
 		return true;
@@ -479,6 +486,10 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				'{"autorName":"Llewellyn van der Merwe","autorEmail":"joomla@vdm.io","player":"1","add_to_button":"0","preachers_display":"2","preachers_list_style":"2","preachers_table_color":"0","preachers_icon":"1","preachers_desc":"1","preachers_sermon_count":"1","preachers_hits":"1","preachers_website":"1","preachers_email":"1","preacher_request_id":"0","preacher_display":"3","preacher_box_contrast":"1","preacher_list_style":"3","preacher_icon":"1","preacher_desc":"1","preacher_sermon_count":"1","preacher_hits":"1","preacher_email":"1","preacher_website":"1","preacher_sermons_display":"2","preacher_sermons_list_style":"2","preacher_sermons_table_color":"0","preacher_sermons_icon":"1","preacher_sermons_desc":"1","preacher_sermons_series":"1","preacher_sermons_category":"1","preacher_sermons_download_counter":"1","preacher_sermons_hits":"1","preacher_sermons_downloads":"1","preacher_sermons_open":"1","categories_display":"2","categories_list_style":"2","categories_table_color":"0","categories_icon":"1","categories_desc":"1","categories_sermon_count":"1","categories_hits":"1","category_display":"3","category_box_contrast":"1","category_list_style":"3","category_icon":"1","category_desc":"1","category_sermon_count":"1","category_hits":"1","category_sermons_display":"2","category_sermons_list_style":"1","category_sermons_table_color":"1","category_sermons_icon":"1","category_sermons_desc":"1","category_sermons_preacher":"1","category_sermons_series":"1","category_sermons_download_counter":"1","category_sermons_hits":"1","category_sermons_downloads":"1","category_sermons_open":"1","list_series_display":"2","list_series_list_style":"2","list_series_table_color":"0","list_series_icon":"1","list_series_desc":"1","list_series_sermon_count":"1","list_series_hits":"1","series_request_id":"0","series_display":"3","series_box_contrast":"1","series_list_style":"3","series_icon":"1","series_desc":"1","series_sermon_count":"1","series_hits":"1","series_sermons_display":"2","series_sermons_list_style":"1","series_sermons_table_color":"1","series_sermons_icon":"1","series_sermons_desc":"1","series_sermons_preacher":"1","series_sermons_category":"1","series_sermons_download_counter":"1","series_sermons_hits":"1","series_sermons_downloads":"1","series_sermons_open":"1","sermon_display":"1","sermon_box_contrast":"1","sermon_list_style":"1","sermon_icon":"1","sermon_desc":"1","sermon_preacher":"1","sermon_series":"1","sermon_category":"1","sermon_download_counter":"1","sermon_hits":"1","sermon_downloads":"1","max_execution_time":"500","check_in":"-1 day","save_history":"1","history_limit":"10","add_jquery_framework":"1","uikit_load":"1","uikit_min":""}'
 			);
 
+
+
+			// Check that the database is up-to date
+			$this->databaseSchemaCheck($this->app);
 
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
@@ -743,10 +754,14 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 
 
 
+
+			// Check that the database is up-to date
+			$this->databaseSchemaCheck($this->app);
+
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 4.0.0-beta1 Was Successful! Let us know if anything is not working as expected.</h3></div>';
+				<h3>Upgrade to Version 4.0.0-beta2 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Add/Update component in the action logs extensions table.
 			$this->setActionLogsExtensions();
@@ -1687,6 +1702,174 @@ class Com_SermondistributorInstallerScript implements InstallerScriptInterface
 				$this->app->enqueueMessage(
 					Text::_('Could not revert the <b>#__assets</b> table rules column back to its default size of varchar(5120), since there is still one or more components that still requires the column to be larger.')
 				);
+			}
+		}
+	}
+
+	/**
+	 * Define the required limits with specific messages for success and warning scenarios
+	 *
+	 * @var array
+	 * @since 3.0.5
+	 */
+	protected array $requiredPHPConfigs = [
+		'upload_max_filesize' => [
+			'value'   => '64M',
+			'success' => 'The upload_max_filesize is appropriately set to handle large files, which is essential for uploading substantial components and media.',
+			'warning' => 'The current upload_max_filesize may not support large file uploads effectively, potentially causing failures during component installation.'
+		],
+		'post_max_size' => [
+			'value'   => '128M',
+			'success' => 'The post_max_size setting is sufficient to manage large data submissions, ensuring smooth data processing within forms and uploads.',
+			'warning' => 'An insufficient post_max_size can lead to truncated data submissions, affecting form functionality and data integrity.'
+		],
+		'max_execution_time' => [
+			'value'   => 60,
+			'success' => 'Max execution time is set high enough to execute complex operations without premature termination, which is crucial for lengthy operations.',
+			'warning' => 'A low max execution time could lead to script timeouts, especially during intensive operations, which might interrupt execution and cause failures during the compiling of a large extension.'
+		],
+		'max_input_vars' => [
+			'value'   => 5000,
+			'success' => 'The max_input_vars setting supports a high number of input variables, facilitating complex forms and detailed component configurations.',
+			'warning' => 'Too few max_input_vars may result in lost data during processing complex forms, which can lead to incomplete configurations and operational issues.'
+		],
+		'max_input_time' => [
+			'value'   => 60,
+			'success' => 'Max input time is adequate for processing inputs efficiently during high-load operations, ensuring no premature timeouts.',
+			'warning' => 'An insufficient max input time could result in incomplete data processing during input-heavy operations, potentially leading to errors and data loss.'
+		],
+		'memory_limit' => [
+			'value'   => '256M',
+			'success' => 'The memory limit is set high to accommodate extensive operations and data processing, which enhances overall performance and stability.',
+			'warning' => 'A low memory limit can lead to frequent crashes and performance issues, particularly when processing large amounts of data or complex calculations.'
+		]
+	];
+
+	/**
+	 * Helper function to convert PHP INI memory values to bytes
+	 *
+	 * @param  string  $value     The value to convert
+	 *
+	 * @return int   The bytes value
+	 * @since 3.0.5
+	 */
+	protected function convertToBytes(string $value): int
+	{
+		$value = trim($value);
+		$lastChar = strtolower($value[strlen($value) - 1]);
+		$numValue = substr($value, 0, -1);
+
+		switch ($lastChar)
+		{
+			case 'g':
+				return $numValue * 1024 * 1024 * 1024;
+			case 'm':
+				return $numValue * 1024 * 1024;
+			case 'k':
+				return $numValue * 1024;
+			default:
+				return (int) $value;
+		}
+	}
+
+	/**
+	 * Check that the required configurations are set for PHP
+	 *
+	 * @param  $app  The application
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 */
+	protected function phpConfigurationCheck($app): void
+	{
+		$showHelp = false;
+
+		// Check each configuration and provide detailed feedback
+		foreach ($this->requiredPHPConfigs as $configName => $configDetails)
+		{
+			$currentValue = ini_get($configName);
+			if ($currentValue === false)
+			{
+				$app->enqueueMessage("Error: Unable to retrieve current setting for '{$configName}'.", 'error');
+				continue;
+			}
+
+			$isMemoryValue = strpbrk($configDetails['value'], 'KMG') !== false;
+			$requiredValueBytes = $isMemoryValue ? $this->convertToBytes($configDetails['value']) : (int) $configDetails['value'];
+			$currentValueBytes = $isMemoryValue ? $this->convertToBytes($currentValue) : (int) $currentValue;
+			$conditionMet = $currentValueBytes >= $requiredValueBytes;
+
+			$messageType = $conditionMet ? 'message' : 'warning';
+			$messageText = $conditionMet ? 
+				"Success: {$configName} is set to {$currentValue}. " . $configDetails['success'] :
+				"Warning: {$configName} configuration should be at least {$configDetails['value']} but is currently {$currentValue}. " . $configDetails['warning'];
+			$showHelp = ($showHelp || $messageType === 'warning') ? true : false;
+			$app->enqueueMessage($messageText, $messageType);
+		}
+
+		if ($showHelp)
+		{
+			$app->enqueueMessage('To optimize your Sermon Distributor environment, specific PHP settings must be enhanced.<br>These settings are crucial for ensuring the successful installation and stable functionality of the extension.<br>We\'ve identified that certain configurations currently do not meet the recommended standards.<br>To adjust these settings and prevent potential issues, please consult our detailed guide available at <a href="https://git.vdm.dev/christian/Joomla-Sermon-Distributor/wiki/PHP-Settings" target="_blank">Sermon Distributor PHP Settings Wiki</a>.
+', 'notice');
+		}
+	}
+
+	/**
+	 * Make sure that the sermondistributor database schema is up to date.
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 */
+	protected function databaseSchemaCheck($app): void
+	{
+		// try to load the schema class
+		try
+		{
+			// make sure the class is loaded
+			$this->ensureClassExists(
+				Schema::class
+			);
+
+			// instantiate the schema class and check/update the database
+			$messages = (new Schema())->update();
+		}
+		catch (\Exception $e)
+		{
+			$app->enqueueMessage($e->getMessage(), 'warning');
+			return;
+		}
+
+		foreach ($messages as $message)
+		{
+			$app->enqueueMessage($message, 'message');
+		}
+	}
+
+	/**
+	 * Ensures that a class in the namespace is available.
+	 * If the class is not already loaded, it attempts to load it via the power autoloader.
+	 *
+	 * @param mixed    $nameClass    The name::class we are looking for.
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 * @throws \Exception If the class could not be loaded.
+	 */
+	protected function ensureClassExists($nameClass): void
+	{
+		if (!class_exists($nameClass, true))
+		{
+			// The power autoloader for this project admin area.
+			$power_autoloader = JPATH_ADMINISTRATOR . '/components/com_sermondistributor/src/Helper/PowerloaderHelper.php';
+			if (file_exists($power_autoloader))
+			{
+				require_once $power_autoloader;
+			}
+
+			// Check again if the class now exists after requiring it
+			if (!class_exists($nameClass, true))
+			{
+				throw new \Exception("We failed to find/load the $nameClass");
 			}
 		}
 	}

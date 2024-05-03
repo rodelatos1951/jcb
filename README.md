@@ -24,38 +24,38 @@ The best way to see all your options is to install this component on you Joomla 
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Sermon Distributor](https://www.vdm.io/)
 + *First Build*: 22nd October, 2015
-+ *Last Build*: 7th March, 2024
++ *Last Build*: 3rd May, 2024
 + *Version*: 4.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Build Time :hourglass:
 
-**244 Hours** or **31 Eight Hour Days** (actual time the author saved -
+**262 Hours** or **33 Eight Hour Days** (actual time the author saved -
 due to [Automated Component Builder](https://www.joomlacomponentbuilder.com))
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > never making one mistake or taking any coffee break.)
 
-+ *Line count*: **87657**
-+ *File count*: **573**
-+ *Folder count*: **120**
++ *Line count*: **94117**
++ *File count*: **601**
++ *Folder count*: **124**
 
-**162 Hours** or **20 Eight Hour Days** (the actual time the author spent)
+**174 Hours** or **22 Eight Hour Days** (the actual time the author spent)
 
 > (with the following break down:
-> **debugging @61hours** = codingtime / 4;
-> **planning @35hours** = codingtime / 7;
-> **mapping @24hours** = codingtime / 10;
-> **office @41hours** = codingtime / 6;)
+> **debugging @66hours** = codingtime / 4;
+> **planning @37hours** = codingtime / 7;
+> **mapping @26hours** = codingtime / 10;
+> **office @44hours** = codingtime / 6;)
 
-**406 Hours** or **51 Eight Hour Days**
+**436 Hours** or **55 Eight Hour Days**
 (a total of the realistic time frame for this project)
 
 > (if creating a folder and file took **5 seconds** and writing one line of code took **10 seconds**,
 > with the normal everyday realities at the office, that includes the component planning, mapping & debugging.)
 
-Project duration: **10.2 weeks** or **2.1 months**
+Project duration: **11 weeks** or **2.3 months**
 
 > This **component** was build with a Joomla [Automated Component Builder](https://www.joomlacomponentbuilder.com).
 > Developed by [Llewellyn van der Merwe](mailto:joomla@vdm.io)

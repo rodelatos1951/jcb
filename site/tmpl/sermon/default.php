@@ -28,7 +28,9 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use TrueChristianChurch\Component\Sermondistributor\Site\Helper\SermondistributorHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -53,7 +55,7 @@ defined('_JEXEC') or die;
 		let requestUrl = '';
 
 		if (key.length > 0 && filename.length > 0) {
-			request = getUrl + '&<?php echo \JSession::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
+			request = getUrl + '&<?php echo Session::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
 		} else {
 			return;
 		}
@@ -75,7 +77,7 @@ defined('_JEXEC') or die;
 	}
 	<?php if (1 == $this->item->playerKey) : ?>
 		soundManager.setup({
-			url: '<?php echo \JUri::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
+			url: '<?php echo Uri::root(true); ?>/media/com_sermondistributor/soundmanager/swf',
 			flashVersion: 9,
 			onready: function() {
 				// Ready to use; soundManager.createSound() etc. can now be called.

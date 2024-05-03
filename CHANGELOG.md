@@ -1,9 +1,10 @@
-# v4.0.0-beta1
+# v4.0.0-beta2
 
 - First release of Sermon Distributor towards Joomla 4
+- Add PHP check to install/update class
+- Add Database check and fix to install/update class
 
-# v3.0.4
+# v3.0.5
 
-- Add the getDocument method call to view
-- Add recall tab memory to view tabs
-- Add root class calls like \JRoute
+- Add PHP check to install/update class
+- Add Database check and fix to install/update class
