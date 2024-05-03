@@ -27,8 +27,9 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Component\ComponentHelper;
 
 /**
  * Sermondistributor Api Form Controller
@@ -145,7 +146,7 @@ class SermondistributorControllerApi extends FormController
 	protected function getApiUser()
 	{
 		// get params
-		$params = \JComponentHelper::getParams('com_sermondistributor');
+		$params = ComponentHelper::getParams('com_sermondistributor');
 		// return user object
 		return Factory::getUser($params->get('api', 0, 'INT'));
 	}

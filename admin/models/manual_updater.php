@@ -31,9 +31,9 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\FOF\Encrypt\AES;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\JsonHelper;
+use TrueChristianChurch\Joomla\FOF\Encrypt\AES;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\JsonHelper;
 
 /**
  * Sermondistributor List Model for Manual_updater

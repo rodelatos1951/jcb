@@ -25,49 +25,12 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// register additional namespace
-\spl_autoload_register(function ($class) {
-	// project-specific base directories and namespace prefix
-	$search = [
-		'libraries/jcb_powers/VDM.Joomla.FOF' => 'VDM\\Joomla\\FOF',
-		'libraries/jcb_powers/VDM.Joomla' => 'VDM\\Joomla'
-	];
-	// Start the search and load if found
-	$found = false;
-	$found_base_dir = "";
-	$found_len = 0;
-	foreach ($search as $base_dir => $prefix)
-	{
-		// does the class use the namespace prefix?
-		$len = strlen($prefix);
-		if (strncmp($prefix, $class, $len) === 0)
-		{
-			// we have a match so load the values
-			$found = true;
-			$found_base_dir = $base_dir;
-			$found_len = $len;
-			// done here
-			break;
-		}
-	}
-	// check if we found a match
-	if (!$found)
-	{
-		// not found so move to the next registered autoloader
-		return;
-	}
-	// get the relative class name
-	$relative_class = substr($class, $found_len);
-	// replace the namespace prefix with the base directory, replace namespace
-	// separators with directory separators in the relative class name, append
-	// with .php
-	$file = JPATH_ROOT . '/' . $found_base_dir . '/src' . str_replace('\\', '/', $relative_class) . '.php';
-	// if the file exists, require it
-	if (file_exists($file))
-	{
-		require $file;
-	}
-});
+// The power autoloader for this project (JPATH_ADMINISTRATOR) area.
+$power_autoloader = JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/powerloader.php';
+if (file_exists($power_autoloader))
+{
+	require_once $power_autoloader;
+}
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -88,15 +51,17 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Joomla\CMS\Filesystem\Folder;
-use VDM\Joomla\Utilities\FileHelper;
-use VDM\Joomla\Utilities\MimeHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
-use VDM\Joomla\Utilities\ObjectHelper;
-use VDM\Joomla\FOF\Encrypt\AES;
-use VDM\Joomla\Utilities\GetHelper;
-use VDM\Joomla\Utilities\JsonHelper;
-use VDM\Joomla\Utilities\FormHelper;
+use TrueChristianChurch\Joomla\Utilities\FileHelper;
+use TrueChristianChurch\Joomla\Utilities\MimeHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
+use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
+use TrueChristianChurch\Joomla\FOF\Encrypt\AES;
+use TrueChristianChurch\Joomla\Utilities\GetHelper;
+use TrueChristianChurch\Joomla\Utilities\JsonHelper;
+use TrueChristianChurch\Joomla\Utilities\FormHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\HTML\HTMLHelper;
 
 /**
  * Sermondistributor component helper.
@@ -209,7 +174,7 @@ abstract class SermondistributorHelper
 		}
 		$keyCounterRAW = $safe->encryptString(json_encode($keyCounter));
 		$keyCounter = self::base64_urlencode($keyCounterRAW);
-		$token = \JSession::getFormToken();
+		$token = Session::getFormToken();
 		$downloadURL = Uri::root().'index.php?option=com_sermondistributor&task=download.file&key='.$keyCounter.'&token='.$token;
 		// check if local .htaccess should be set
 		$setHtaccess = false;
@@ -219,7 +184,7 @@ abstract class SermondistributorHelper
 		{
 			case 1:
 				// local file get local folder and check if outside root (if not then allow direct)
-				$localFolder = \JComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
+				$localFolder = ComponentHelper::getParams('com_sermondistributor')->get('localfolder', JPATH_ROOT.'/images').'/';
 				// should we allow direct downloads
 				$allowDirect = false;
 				if (2 == $sermon->link_type && strpos($localFolder, JPATH_ROOT) !== false)
@@ -257,7 +222,7 @@ abstract class SermondistributorHelper
 				break;
 			case 2:
 				// Dropbox get global dropbox switch 
-				$addToButton = \JComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
+				$addToButton = ComponentHelper::getParams('com_sermondistributor')->get('add_to_button', 0);
 				if (1 == $sermon->build)
 				{
 					if (self::checkArray($sermon->manual_files))
@@ -490,7 +455,7 @@ abstract class SermondistributorHelper
 	public static function getExternalListingUpdateKeys($id = null, $updateMethod = 2, $returnType = 1)
 	{
 		// first check if this file already has statistics
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName(array('id','sharedurl','folder','permissiontype','dropboxoptions','build')));
 		$query->from($db->quoteName('#__sermondistributor_external_source'));
@@ -607,9 +572,9 @@ abstract class SermondistributorHelper
 		{
 			$counter->filename = $filename;
 			// set the date object
-			$date = JFactory::getDate();
+			$date = Factory::getDate();
 			// first check if this file already has statistics
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select($db->quoteName(array('id','counter')));
 			$query->from($db->quoteName('#__sermondistributor_statistic'));
@@ -657,7 +622,7 @@ abstract class SermondistributorHelper
 			$opener = new FOFEncryptAes($localkey, 128);
 			$key = rtrim($opener->decryptString($key), "\0");
 			// load the links from the database
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			// Create a new query object.
 			$query = $db->getQuery(true);
 			$query->select('size');
@@ -746,7 +711,7 @@ abstract class SermondistributorHelper
 			if (isset($build[$type]))
 			{
 				// load the links from the database
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 				// Create a new query object.
 				$query = $db->getQuery(true);
 				$query->select($db->quoteName(array('key', $target[$get])));
@@ -777,7 +742,7 @@ abstract class SermondistributorHelper
 		if (!isset(self::$localkey[$type]))
 		{
 			// get the main key
-			self::$localkey[$type] = \JComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
+			self::$localkey[$type] = ComponentHelper::getParams('com_sermondistributor')->get($type, 'localKey34fdWEkl');
 		}
 		return self::$localkey[$type];
 	}
@@ -803,7 +768,7 @@ abstract class SermondistributorHelper
 				return false;
 			}
 		}
-		self::setUpdateError($id, array(JText::_('COM_SERMONDISTRIBUTOR_THE_EXTERNAL_SOURCE_COULD_NOT_BE_FOUND')));
+		self::setUpdateError($id, array(Text::_('COM_SERMONDISTRIBUTOR_THE_EXTERNAL_SOURCE_COULD_NOT_BE_FOUND')));
 		return false;
 	}
 
@@ -826,7 +791,7 @@ abstract class SermondistributorHelper
 		$updateInfo = self::updateInfo($id);
 		if (!$updateInfo)
 		{
-			$errors[] = JText::_('COM_SERMONDISTRIBUTOR_THIS_SOURCE_HAS_NO_LOCAL_LISTING_SET');
+			$errors[] = Text::_('COM_SERMONDISTRIBUTOR_THIS_SOURCE_HAS_NO_LOCAL_LISTING_SET');
 		}
 		// build the return string
 		if (isset($updateInfo['last']) || self::checkArray($errors))
@@ -835,19 +800,19 @@ abstract class SermondistributorHelper
 			// great we have source status
 			if (isset($updateInfo['last']))
 			{
-				$body[] = '<h3>'. JText::_('COM_SERMONDISTRIBUTOR_LISTING_INFO') . '</h3>';
-				$body[] = '<p><b>'. JText::_('COM_SERMONDISTRIBUTOR_LAST_UPDATE') . ':</b> <em>'.$updateInfo['last'];
-				$body[] = '</em><br /><b>'. JText::_('COM_SERMONDISTRIBUTOR_NUMBER_OF_FILES_LISTED') . ':</b> <em>'.$updateInfo['qty'];
+				$body[] = '<h3>'. Text::_('COM_SERMONDISTRIBUTOR_LISTING_INFO') . '</h3>';
+				$body[] = '<p><b>'. Text::_('COM_SERMONDISTRIBUTOR_LAST_UPDATE') . ':</b> <em>'.$updateInfo['last'];
+				$body[] = '</em><br /><b>'. Text::_('COM_SERMONDISTRIBUTOR_NUMBER_OF_FILES_LISTED') . ':</b> <em>'.$updateInfo['qty'];
 				$body[] = '</em></p>';
 			}
 			// now set any errors found
 			if (self::checkArray($errors))
 			{
-				$body[] = '<h3>'. JText::_('COM_SERMONDISTRIBUTOR_NOTICE') . '</h3>';
+				$body[] = '<h3>'. Text::_('COM_SERMONDISTRIBUTOR_NOTICE') . '</h3>';
 				$body[] = implode('', $errors);
 			}
-			return '<a class="btn btn-small btn-success" href="#source-status'.$id.'" data-toggle="modal">'.JText::_('COM_SERMONDISTRIBUTOR_VIEW_UPDATE_STATUS').'</a>' 
-				. JHtml::_('bootstrap.renderModal', 'source-status'.$id, array('title' => JText::_('COM_SERMONDISTRIBUTOR_SOURCE_STATUS_REPORT')), implode('', $body));
+			return '<a class="btn btn-small btn-success" href="#source-status'.$id.'" data-toggle="modal">'.Text::_('COM_SERMONDISTRIBUTOR_VIEW_UPDATE_STATUS').'</a>' 
+				. HTMLHelper::_('bootstrap.renderModal', 'source-status'.$id, array('title' => Text::_('COM_SERMONDISTRIBUTOR_SOURCE_STATUS_REPORT')), implode('', $body));
 		}
  		// no status found
 		return false;
@@ -855,7 +820,7 @@ abstract class SermondistributorHelper
 
 	public static function updateInfo($id)
 	{
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		// Create a new query object.
 		$query = $db->getQuery(true);
 		$query->select($db->quoteName(array('a.created','a.modified')));
@@ -907,7 +872,7 @@ abstract class SermondistributorHelper
 		{
 			return '<ul><li>'.implode('</li><li>', self::$updateErrors[$id]).'</li></ul>';
 		}
-		return JText::_('COM_SERMONDISTRIBUTOR_UNKNOWN_ERROR_HAS_OCCURRED');
+		return Text::_('COM_SERMONDISTRIBUTOR_UNKNOWN_ERROR_HAS_OCCURRED');
 	}
 
 	protected static function setUpdateError($id, $errorArray)

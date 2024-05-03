@@ -29,8 +29,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\LayoutHelper;
-use VDM\Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
 
 $players = array();
 $num = 'A';

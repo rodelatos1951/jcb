@@ -35,8 +35,9 @@ use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Filesystem\File;
-use VDM\Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Router\Route;
 
 /**
  * Sermondistributor Html View class for the Categories
@@ -60,7 +61,7 @@ class SermondistributorViewCategories extends HtmlView
 		{
 			foreach ($this->items as $nr => &$item)
 			{
-				$item->link = \JRoute::_(SermondistributorHelperRoute::getCategoryRoute($item->slug));
+				$item->link = Route::_(SermondistributorHelperRoute::getCategoryRoute($item->slug));
 			}
 		}
 		// set the FooTable style

@@ -61,7 +61,7 @@ use Joomla\CMS\Session\Session;
 		let requestUrl = '';
 
 		if (key.length > 0 && filename.length > 0) {
-			request = getUrl + '&<?php echo \JSession::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
+			request = getUrl + '&<?php echo Session::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
 		} else {
 			return;
 		}

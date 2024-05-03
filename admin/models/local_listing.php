@@ -37,9 +37,9 @@ use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
-use VDM\Joomla\FOF\Encrypt\AES;
-use VDM\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\FOF\Encrypt\AES;
+use TrueChristianChurch\Joomla\Utilities\StringHelper as UtilitiesStringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
 
 /**
  * Sermondistributor Local_listing Admin Model

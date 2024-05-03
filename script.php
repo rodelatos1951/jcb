@@ -32,6 +32,8 @@ use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Version;
 use Joomla\CMS\HTML\HTMLHelper as Html;
+use TrueChristianChurch\Joomla\SermonDistributor\Table\Schema;
+use Joomla\CMS\Component\ComponentHelper;
 HTML::_('bootstrap.renderModal');
 
 /**
@@ -1048,7 +1050,7 @@ class Com_SermondistributorInstallerScript
 		{
 			$version = explode('.', $manifest->version);
 			// Get a db connection.
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			if ($version[0] == 1 && $version[1] < 4)
 			{
 				// Create a new query object.
@@ -1086,12 +1088,12 @@ class Com_SermondistributorInstallerScript
 							// make sure the files are set to json
 							$object->manual_files = json_encode($files);
 							$object->id = $id;
-							JFactory::getDbo()->updateObject('#__sermondistributor_sermon', $object, 'id');
+							Factory::getDbo()->updateObject('#__sermondistributor_sermon', $object, 'id');
 						}
 					}
 				}
 				// do an update by moving config data to the new external source area.
-				$this->comParams = \JComponentHelper::getParams('com_sermondistributor');
+				$this->comParams = ComponentHelper::getParams('com_sermondistributor');
 				// the number of links
 				$numbers = range(1, 4);
 				// the types of links
@@ -1201,10 +1203,16 @@ class Com_SermondistributorInstallerScript
 					}
 			}
 		}
+
+			// Check that the required configuration are set for PHP
+			$this->phpConfigurationCheck($app);
 		}
 		// do any install needed
 		if ($type === 'install')
 		{
+
+			// Check that the required configuration are set for PHP
+			$this->phpConfigurationCheck($app);
 		}
 		// check if the PHPExcel stuff is still around
 		if (File::exists(JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/PHPExcel.php'))
@@ -1380,6 +1388,10 @@ class Com_SermondistributorInstallerScript
 			$db->setQuery($query);
 			$allDone = $db->execute();
 
+
+
+			// Check that the database is up-to date
+			$this->databaseSchemaCheck($app);
 
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
@@ -1761,14 +1773,14 @@ class Com_SermondistributorInstallerScript
 			if ((isset($this->updateTargetsU) && SermondistributorHelper::checkArray($this->updateTargetsU)) || (isset($this->updateTargetsF) && SermondistributorHelper::checkArray($this->updateTargetsF)))
 			{
 				// Get a db connection.
-				$db = JFactory::getDbo();
+				$db = Factory::getDbo();
 
 				// get the file types
 				$dropbox_filetypes = $this->comParams->get("dropbox_filetypes", null);
 
 				// some defaults
-				$user = JFactory::getUser();
-				$todayDate = JFactory::getDate()->toSql();
+				$user = Factory::getUser();
+				$todayDate = Factory::getDate()->toSql();
 
 				// now store the old data to the new area
 				if (isset($this->updateTargetsU) &&SermondistributorHelper::checkArray($this->updateTargetsU))
@@ -1840,14 +1852,17 @@ class Com_SermondistributorInstallerScript
 					}
 				}
 				// Get Application object
-				$app = JFactory::getApplication();
+				$app = Factory::getApplication();
 				$app->enqueueMessage('Your Dropbox integration has been moved, and can now be viewed at the new external source view. You will now need an APP token to update your local listing of the Dropbox files. Please review the Wiki tab when creating/editing the external source, or open an issue on github if you experience any more difficulties.', 'Info');
 			}
+
+			// Check that the database is up-to date
+			$this->databaseSchemaCheck($app);
 
 			echo '<div style="background-color: #fff;" class="alert alert-info"><a target="_blank" href="https://www.vdm.io/" title="Sermon Distributor">
 				<img src="components/com_sermondistributor/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 3.0.4 Was Successful! Let us know if anything is not working as expected.</h3></div>';
+				<h3>Upgrade to Version 3.0.5 Was Successful! Let us know if anything is not working as expected.</h3></div>';
 
 			// Set db if not set already.
 			if (!isset($db))
@@ -2212,6 +2227,174 @@ class Com_SermondistributorInstallerScript
 			return $nr;
 		}
 		return false;
+	}
+
+	/**
+	 * Define the required limits with specific messages for success and warning scenarios
+	 *
+	 * @var array
+	 * @since 3.0.5
+	 */
+	protected array $requiredPHPConfigs = [
+		'upload_max_filesize' => [
+			'value'   => '64M',
+			'success' => 'The upload_max_filesize is appropriately set to handle large files, which is essential for uploading substantial components and media.',
+			'warning' => 'The current upload_max_filesize may not support large file uploads effectively, potentially causing failures during component installation.'
+		],
+		'post_max_size' => [
+			'value'   => '128M',
+			'success' => 'The post_max_size setting is sufficient to manage large data submissions, ensuring smooth data processing within forms and uploads.',
+			'warning' => 'An insufficient post_max_size can lead to truncated data submissions, affecting form functionality and data integrity.'
+		],
+		'max_execution_time' => [
+			'value'   => 60,
+			'success' => 'Max execution time is set high enough to execute complex operations without premature termination, which is crucial for lengthy operations.',
+			'warning' => 'A low max execution time could lead to script timeouts, especially during intensive operations, which might interrupt execution and cause failures during the compiling of a large extension.'
+		],
+		'max_input_vars' => [
+			'value'   => 5000,
+			'success' => 'The max_input_vars setting supports a high number of input variables, facilitating complex forms and detailed component configurations.',
+			'warning' => 'Too few max_input_vars may result in lost data during processing complex forms, which can lead to incomplete configurations and operational issues.'
+		],
+		'max_input_time' => [
+			'value'   => 60,
+			'success' => 'Max input time is adequate for processing inputs efficiently during high-load operations, ensuring no premature timeouts.',
+			'warning' => 'An insufficient max input time could result in incomplete data processing during input-heavy operations, potentially leading to errors and data loss.'
+		],
+		'memory_limit' => [
+			'value'   => '256M',
+			'success' => 'The memory limit is set high to accommodate extensive operations and data processing, which enhances overall performance and stability.',
+			'warning' => 'A low memory limit can lead to frequent crashes and performance issues, particularly when processing large amounts of data or complex calculations.'
+		]
+	];
+
+	/**
+	 * Helper function to convert PHP INI memory values to bytes
+	 *
+	 * @param  string  $value     The value to convert
+	 *
+	 * @return int   The bytes value
+	 * @since 3.0.5
+	 */
+	protected function convertToBytes(string $value): int
+	{
+		$value = trim($value);
+		$lastChar = strtolower($value[strlen($value) - 1]);
+		$numValue = substr($value, 0, -1);
+
+		switch ($lastChar)
+		{
+			case 'g':
+				return $numValue * 1024 * 1024 * 1024;
+			case 'm':
+				return $numValue * 1024 * 1024;
+			case 'k':
+				return $numValue * 1024;
+			default:
+				return (int) $value;
+		}
+	}
+
+	/**
+	 * Check that the required configurations are set for PHP
+	 *
+	 * @param  $app  The application
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 */
+	protected function phpConfigurationCheck($app): void
+	{
+		$showHelp = false;
+
+		// Check each configuration and provide detailed feedback
+		foreach ($this->requiredPHPConfigs as $configName => $configDetails)
+		{
+			$currentValue = ini_get($configName);
+			if ($currentValue === false)
+			{
+				$app->enqueueMessage("Error: Unable to retrieve current setting for '{$configName}'.", 'error');
+				continue;
+			}
+
+			$isMemoryValue = strpbrk($configDetails['value'], 'KMG') !== false;
+			$requiredValueBytes = $isMemoryValue ? $this->convertToBytes($configDetails['value']) : (int) $configDetails['value'];
+			$currentValueBytes = $isMemoryValue ? $this->convertToBytes($currentValue) : (int) $currentValue;
+			$conditionMet = $currentValueBytes >= $requiredValueBytes;
+
+			$messageType = $conditionMet ? 'message' : 'warning';
+			$messageText = $conditionMet ? 
+				"Success: {$configName} is set to {$currentValue}. " . $configDetails['success'] :
+				"Warning: {$configName} configuration should be at least {$configDetails['value']} but is currently {$currentValue}. " . $configDetails['warning'];
+			$showHelp = ($showHelp || $messageType === 'warning') ? true : false;
+			$app->enqueueMessage($messageText, $messageType);
+		}
+
+		if ($showHelp)
+		{
+			$app->enqueueMessage('To optimize your Sermon Distributor environment, specific PHP settings must be enhanced.<br>These settings are crucial for ensuring the successful installation and stable functionality of the extension.<br>We\'ve identified that certain configurations currently do not meet the recommended standards.<br>To adjust these settings and prevent potential issues, please consult our detailed guide available at <a href="https://git.vdm.dev/christian/Joomla-Sermon-Distributor/wiki/PHP-Settings" target="_blank">Sermon Distributor PHP Settings Wiki</a>.
+', 'notice');
+		}
+	}
+
+	/**
+	 * Make sure that the sermondistributor database schema is up to date.
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 */
+	protected function databaseSchemaCheck($app): void
+	{
+		// try to load the schema class
+		try
+		{
+			// make sure the class is loaded
+			$this->ensureClassExists(
+				Schema::class
+			);
+
+			// instantiate the schema class and check/update the database
+			$messages = (new Schema())->update();
+		}
+		catch (\Exception $e)
+		{
+			$app->enqueueMessage($e->getMessage(), 'warning');
+			return;
+		}
+
+		foreach ($messages as $message)
+		{
+			$app->enqueueMessage($message, 'message');
+		}
+	}
+
+	/**
+	 * Ensures that a class in the namespace is available.
+	 * If the class is not already loaded, it attempts to load it via the power autoloader.
+	 *
+	 * @param mixed    $nameClass    The name::class we are looking for.
+	 *
+	 * @return void
+	 * @since 3.0.5
+	 * @throws \Exception If the class could not be loaded.
+	 */
+	protected function ensureClassExists($nameClass): void
+	{
+		if (!class_exists($nameClass, true))
+		{
+			// The power autoloader for this project admin area.
+			$power_autoloader = JPATH_ADMINISTRATOR . '/components/com_sermondistributor/helpers/powerloader.php';
+			if (file_exists($power_autoloader))
+			{
+				require_once $power_autoloader;
+			}
+
+			// Check again if the class now exists after requiring it
+			if (!class_exists($nameClass, true))
+			{
+				throw new \Exception("We failed to find/load the $nameClass");
+			}
+		}
 	}
 
 	/**

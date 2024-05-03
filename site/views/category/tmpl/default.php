@@ -29,6 +29,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper as Html;
+use Joomla\CMS\Session\Session;
 ?>
 <form action="<?php echo Route::_('index.php?option=com_sermondistributor'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if ($this->category): ?>
@@ -60,7 +61,7 @@ use Joomla\CMS\HTML\HTMLHelper as Html;
 		let requestUrl = '';
 
 		if (key.length > 0 && filename.length > 0) {
-			request = getUrl + '&<?php echo \JSession::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
+			request = getUrl + '&<?php echo Session::getFormToken(); ?>=1&key=' + encodeURIComponent(key) + '&filename=' + encodeURIComponent(filename);
 		} else {
 			return;
 		}

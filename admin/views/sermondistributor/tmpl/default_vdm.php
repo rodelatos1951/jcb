@@ -26,7 +26,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Language\Text;
-use VDM\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
 
 ?>
 <img alt="<?php echo Text::_('COM_SERMONDISTRIBUTOR'); ?>" src="components/com_sermondistributor/assets/images/vdm-component.jpg">

@@ -1,3 +1,8 @@
+# v3.0.5
+
+- Add PHP check to install/update class
+- Add Database check and fix to install/update class
+
 # v3.0.4
 
 - Add the getDocument method call to view

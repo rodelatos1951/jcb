@@ -31,12 +31,13 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\FileHelper;
-use VDM\Joomla\Utilities\StringHelper;
-use VDM\Joomla\Utilities\JsonHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\ObjectHelper;
-use VDM\Joomla\Utilities\GetHelper;
+use TrueChristianChurch\Joomla\Utilities\FileHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\JsonHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\ObjectHelper;
+use TrueChristianChurch\Joomla\Utilities\GetHelper;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * Sermondistributor Ajax List Model
@@ -245,11 +246,11 @@ class SermondistributorModelAjax extends ListModel
 			$result['error'] = '<span style="color: red;">' . Text::sprintf('COM_SERMONDISTRIBUTOR_NO_CRONJOB_PATH_FOUND_FOR_S', $type) . '</span>';
 			if ($this->hasCurl())
 			{
-				$path = '*/15 * * * * curl -s "' .\JUri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
+				$path = '*/15 * * * * curl -s "' .Uri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
 			}
 			else
 			{
-				$path = '*/15 * * * * wget "' .\JUri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
+				$path = '*/15 * * * * wget "' .Uri::root() . 'index.php?option=com_sermondistributor&task=api.externalUpdate" >/dev/null 2>&1';
 			}
 			$result['path'] =  '<code>' . $path . '</code>';
 		}

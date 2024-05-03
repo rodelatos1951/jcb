@@ -34,8 +34,8 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper as UtilitiesArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
 
 /**
  * Sermondistributor List Model
@@ -327,7 +327,7 @@ class SermondistributorModelSermondistributor extends ListModel
 				var activeVersion = tagreleases[0].tag_name.substring(1);
 				if (activeVersion === manifest.version) {
 					// local version is in sync with latest release
-					jQuery(".update-notice").html("<small><span style=\'color:green;\'><span class=\'icon-shield\'></span>'.Text::_('COM_SERMONDISTRIBUTOR_UP_TO_DATE').'</span></small>");
+					jQuery(".update-notice").html("<small><span style=\'color:green;\'><span class=\'icon-shield\'></span>&nbsp;'.Text::_('COM_SERMONDISTRIBUTOR_UP_TO_DATE').'</span></small>");
 				} else {
 					// split versions in to array
 					var activeVersionArray = activeVersion.split(".");
@@ -336,10 +336,10 @@ class SermondistributorModelSermondistributor extends ListModel
 					(+localVersionArray[0] == +activeVersionArray[0] && +localVersionArray[1] > +activeVersionArray[1]) || 
 					(+localVersionArray[0] == +activeVersionArray[0] && +localVersionArray[1] == +activeVersionArray[1] && +localVersionArray[2] > +activeVersionArray[2])) {
 						// local version head latest release
-						jQuery(".update-notice").html("<small><span style=\'color:#F7B033;\'><span class=\'icon-wrench\'></span>'.Text::_('COM_SERMONDISTRIBUTOR_BETA_RELEASE').'</span></small>");
+						jQuery(".update-notice").html("<small><span style=\'color:#F7B033;\'><span class=\'icon-wrench\'></span>&nbsp;'.Text::_('COM_SERMONDISTRIBUTOR_PRE_RELEASE').'</span></small>");
 					} else {
 						// local version behind latest release
-						jQuery(".update-notice").html("<small><span style=\'color:red;\'><span class=\'icon-warning-circle\'></span>'.Text::_('COM_SERMONDISTRIBUTOR_OUT_OF_DATE').'</span></small>");
+						jQuery(".update-notice").html("<small><span style=\'color:red;\'><span class=\'icon-warning-circle\'></span>&nbsp;'.Text::_('COM_SERMONDISTRIBUTOR_OUT_OF_DATE').'</span></small>");
 					}
 				}
 				// set the taged releases

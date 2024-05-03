@@ -30,8 +30,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper as Html;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use VDM\Joomla\Utilities\ArrayHelper;
-use VDM\Joomla\Utilities\StringHelper;
+use TrueChristianChurch\Joomla\Utilities\ArrayHelper;
+use TrueChristianChurch\Joomla\Utilities\StringHelper;
+use Joomla\CMS\Session\Session;
 Html::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 Html::_('behavior.formvalidator');
 Html::_('formbehavior.chosen', 'select');
@@ -127,7 +128,7 @@ jQuery(document).ready(function($) {
 </div>
 <script>
 // token 
-var token = '<?php echo \JSession::getFormToken(); ?>';
+var token = '<?php echo Session::getFormToken(); ?>';
 // nice little dot trick :)
 jQuery(document).ready( function($) {
   var x=0;
